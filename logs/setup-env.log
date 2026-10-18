@@ -1,0 +1,291 @@
+﻿Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Requirement already satisfied: pip in .\.venv\Lib\site-packages (26.2.1)
+Requirement already satisfied: setuptools in .\.venv\Lib\site-packages (84.0.0)
+Requirement already satisfied: wheel in .\.venv\Lib\site-packages (0.48.0)
+Requirement already satisfied: packaging>=24.0 in .\.venv\Lib\site-packages (from wheel) (26.3)
+Looking in indexes: https://download.pytorch.org/whl/cu128, https://pypi.tuna.tsinghua.edu.cn/simple
+Collecting torch==2.7.1
+  Downloading torch-2.7.1%2Bcu128-cp313-cp313-win_amd64.whl.metadata (27 kB)
+Collecting torchvision==0.22.1
+  Using cached torchvision-0.22.1%2Bcu128-cp313-cp313-win_amd64.whl.metadata (6.3 kB)
+Collecting filelock (from torch==2.7.1)
+  Downloading filelock-4.2.0-py3-none-any.whl (135 kB)
+Collecting typing-extensions>=4.10.0 (from torch==2.7.1)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Collecting sympy>=1.13.3 (from torch==2.7.1)
+  Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+     ---------------------------------------- 6.3/6.3 MB 6.1 MB/s  0:00:01
+Collecting networkx (from torch==2.7.1)
+  Downloading networkx-3.7-py3-none-any.whl (2.1 MB)
+     ---------------------------------------- 2.1/2.1 MB 7.4 MB/s  0:00:00
+Collecting jinja2 (from torch==2.7.1)
+  Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Collecting fsspec (from torch==2.7.1)
+  Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+Requirement already satisfied: setuptools in .\.venv\Lib\site-packages (from torch==2.7.1) (84.0.0)
+Collecting numpy (from torchvision==0.22.1)
+  Downloading numpy-2.5.4-cp313-cp313-win_amd64.whl (12.6 MB)
+     ---------------------------------------- 12.6/12.6 MB 3.8 MB/s  0:00:03
+Collecting pillow!=8.3.*,>=5.3.0 (from torchvision==0.22.1)
+  Downloading pillow-12.3.0-cp313-cp313-win_amd64.whl (7.2 MB)
+     ---------------------------------------- 7.2/7.2 MB 5.7 MB/s  0:00:01
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch==2.7.1)
+  Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+     ---------------------------------------- 536.2/536.2 kB 4.4 MB/s  0:00:00
+Collecting MarkupSafe>=2.0 (from jinja2->torch==2.7.1)
+  Downloading markupsafe-3.0.4-cp313-cp313-win_amd64.whl (14 kB)
+Downloading torch-2.7.1%2Bcu128-cp313-cp313-win_amd64.whl (3273.0 MB)
+   ---------------------------------------- 3.3/3.3 GB 3.1 MB/s  0:16:24
+Using cached torchvision-0.22.1%2Bcu128-cp313-cp313-win_amd64.whl (7.6 MB)
+Installing collected packages: mpmath, typing-extensions, sympy, pillow, numpy, networkx, MarkupSafe, fsspec, filelock, jinja2, torch, torchvision
+
+Successfully installed MarkupSafe-3.0.4 filelock-4.2.0 fsspec-2026.9.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.7 numpy-2.5.4 pillow-12.3.0 sympy-1.14.0 torch-2.7.1+cu128 torchvision-0.22.1+cu128 typing-extensions-4.16.0
+Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Obtaining file:///D:/%E6%9C%BA%E7%94%B5%E5%88%9B%E6%96%B0%E5%AE%9E%E9%AA%8C%E5%AE%A4/%E6%99%BA%E8%83%BD%E8%A3%85%E5%A4%87%E5%AE%9E%E9%AA%8C%E5%AE%A4%20m1%E6%9C%BA%E6%A2%B0%E8%87%82%E6%8A%93%E5%8F%96/LeRobot/lerobot
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting datasets<4.2.0,>=4.0.0 (from lerobot==0.4.4)
+  Downloading datasets-4.1.1-py3-none-any.whl (503 kB)
+Collecting diffusers<0.36.0,>=0.27.2 (from lerobot==0.4.4)
+  Downloading diffusers-0.35.2-py3-none-any.whl (4.1 MB)
+     ---------------------------------------- 4.1/4.1 MB 2.5 MB/s  0:00:01
+Collecting huggingface-hub<0.36.0,>=0.34.2 (from huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading huggingface_hub-0.35.3-py3-none-any.whl (564 kB)
+     ---------------------------------------- 564.3/564.3 kB 1.9 MB/s  0:00:00
+Collecting accelerate<2.0.0,>=1.10.0 (from lerobot==0.4.4)
+  Downloading accelerate-1.15.0-py3-none-any.whl (394 kB)
+Collecting setuptools<81.0.0,>=71.0.0 (from lerobot==0.4.4)
+  Downloading setuptools-80.10.2-py3-none-any.whl (1.1 MB)
+     ---------------------------------------- 1.1/1.1 MB 2.4 MB/s  0:00:00
+Collecting cmake<4.2.0,>=3.29.0.1 (from lerobot==0.4.4)
+  Downloading cmake-4.1.3-py3-none-win_amd64.whl (37.5 MB)
+     ---------------------------------------- 37.5/37.5 MB 3.2 MB/s  0:00:11
+Collecting einops<0.9.0,>=0.8.0 (from lerobot==0.4.4)
+  Downloading einops-0.8.2-py3-none-any.whl (65 kB)
+Collecting opencv-python-headless<4.13.0,>=4.9.0 (from lerobot==0.4.4)
+  Downloading opencv_python_headless-4.12.0.88-cp37-abi3-win_amd64.whl (38.9 MB)
+     ---------------------------------------- 38.9/38.9 MB 2.5 MB/s  0:00:15
+Collecting av<16.0.0,>=15.0.0 (from lerobot==0.4.4)
+  Downloading av-15.1.0-cp313-cp313-win_amd64.whl (31.3 MB)
+     ---------------------------------------- 31.3/31.3 MB 3.5 MB/s  0:00:09
+Collecting jsonlines<5.0.0,>=4.0.0 (from lerobot==0.4.4)
+  Downloading jsonlines-4.0.0-py3-none-any.whl (8.7 kB)
+Collecting packaging<26.0,>=24.2 (from lerobot==0.4.4)
+  Downloading packaging-25.0-py3-none-any.whl (66 kB)
+Collecting pynput<1.9.0,>=1.7.7 (from lerobot==0.4.4)
+  Downloading pynput-1.8.2-py2.py3-none-any.whl (92 kB)
+Collecting pyserial<4.0,>=3.5 (from lerobot==0.4.4)
+  Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
+Collecting wandb<0.25.0,>=0.24.0 (from lerobot==0.4.4)
+  Downloading wandb-0.24.2-py3-none-win_amd64.whl (22.3 MB)
+     ---------------------------------------- 22.3/22.3 MB 3.8 MB/s  0:00:05
+Requirement already satisfied: torch<2.8.0,>=2.2.1 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from lerobot==0.4.4) (2.7.1+cu128)
+Requirement already satisfied: torchvision<0.23.0,>=0.21.0 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from lerobot==0.4.4) (0.22.1+cu128)
+Collecting draccus==0.10.0 (from lerobot==0.4.4)
+  Downloading draccus-0.10.0-py3-none-any.whl (71 kB)
+Collecting gymnasium<2.0.0,>=1.1.1 (from lerobot==0.4.4)
+  Downloading gymnasium-1.4.0-py3-none-any.whl (476 kB)
+Collecting rerun-sdk<0.27.0,>=0.24.0 (from lerobot==0.4.4)
+  Downloading rerun_sdk-0.26.2-cp39-abi3-win_amd64.whl (84.3 MB)
+     ---------------------------------------- 84.3/84.3 MB 3.7 MB/s  0:00:22
+Collecting deepdiff<9.0.0,>=7.0.1 (from lerobot==0.4.4)
+  Downloading deepdiff-8.6.2-py3-none-any.whl (91 kB)
+Collecting imageio<3.0.0,>=2.34.0 (from imageio[ffmpeg]<3.0.0,>=2.34.0->lerobot==0.4.4)
+  Downloading imageio-2.38.1-py3-none-any.whl (328 kB)
+Collecting termcolor<4.0.0,>=2.4.0 (from lerobot==0.4.4)
+  Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+Collecting feetech-servo-sdk<2.0.0,>=1.0.0 (from lerobot==0.4.4)
+  Downloading feetech-servo-sdk-1.0.0.tar.gz (8.4 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting pyorbbecsdk2<3.0.0,>=2.0.15 (from lerobot==0.4.4)
+  Downloading pyorbbecsdk2-2.1.2-cp313-cp313-win_amd64.whl (17.6 MB)
+     ---------------------------------------- 17.6/17.6 MB 5.0 MB/s  0:00:03
+Collecting pybind11==2.12.0 (from lerobot==0.4.4)
+  Downloading pybind11-2.12.0-py3-none-any.whl (234 kB)
+Collecting pybind11-global==2.12.0 (from lerobot==0.4.4)
+  Downloading pybind11_global-2.12.0-py3-none-any.whl (425 kB)
+Collecting opencv-python<4.13.0,>=4.9.0 (from lerobot==0.4.4)
+  Downloading opencv_python-4.12.0.88-cp37-abi3-win_amd64.whl (39.0 MB)
+     ---------------------------------------- 39.0/39.0 MB 4.0 MB/s  0:00:09
+Requirement already satisfied: wheel in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from lerobot==0.4.4) (0.48.0)
+Requirement already satisfied: numpy in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from lerobot==0.4.4) (2.5.4)
+Collecting pygame<2.7.0,>=2.5.1 (from lerobot==0.4.4)
+  Downloading pygame-2.6.1-cp313-cp313-win_amd64.whl (10.6 MB)
+     ---------------------------------------- 10.6/10.6 MB 5.2 MB/s  0:00:02
+Collecting mergedeep~=1.3 (from draccus==0.10.0->lerobot==0.4.4)
+  Downloading mergedeep-1.3.4-py3-none-any.whl (6.4 kB)
+Collecting pyyaml~=6.0 (from draccus==0.10.0->lerobot==0.4.4)
+  Downloading pyyaml-6.0.3-cp313-cp313-win_amd64.whl (154 kB)
+Collecting pyyaml-include~=1.4 (from draccus==0.10.0->lerobot==0.4.4)
+  Downloading pyyaml_include-1.4.1-py3-none-any.whl (19 kB)
+Collecting toml~=0.10 (from draccus==0.10.0->lerobot==0.4.4)
+  Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Collecting typing-inspect~=0.9.0 (from draccus==0.10.0->lerobot==0.4.4)
+  Downloading typing_inspect-0.9.0-py3-none-any.whl (8.8 kB)
+Collecting psutil (from accelerate<2.0.0,>=1.10.0->lerobot==0.4.4)
+  Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+Collecting safetensors>=0.4.3 (from accelerate<2.0.0,>=1.10.0->lerobot==0.4.4)
+  Downloading safetensors-0.8.0-cp310-abi3-win_amd64.whl (355 kB)
+Requirement already satisfied: filelock in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4) (4.2.0)
+Collecting pyarrow>=21.0.0 (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading pyarrow-26.0.0-cp313-cp313-win_amd64.whl (28.5 MB)
+     ---------------------------------------- 28.5/28.5 MB 5.1 MB/s  0:00:05
+Collecting dill<0.4.1,>=0.3.0 (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading dill-0.4.0-py3-none-any.whl (119 kB)
+Collecting pandas (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading pandas-3.0.6-cp313-cp313-win_amd64.whl (9.6 MB)
+     ---------------------------------------- 9.6/9.6 MB 5.4 MB/s  0:00:01
+Collecting requests>=2.32.2 (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Collecting tqdm>=4.66.3 (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+Collecting xxhash (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading xxhash-4.0.1-cp313-cp313-win_amd64.whl (36 kB)
+Collecting multiprocess<0.70.17 (from datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading multiprocess-0.70.16-py312-none-any.whl (146 kB)
+Collecting fsspec<=2025.9.0,>=2023.1.0 (from fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading fsspec-2025.9.0-py3-none-any.whl (199 kB)
+Collecting orderly-set<6,>=5.4.1 (from deepdiff<9.0.0,>=7.0.1->lerobot==0.4.4)
+  Downloading orderly_set-5.5.0-py3-none-any.whl (13 kB)
+Collecting importlib_metadata (from diffusers<0.36.0,>=0.27.2->lerobot==0.4.4)
+  Downloading importlib_metadata-9.0.1-py3-none-any.whl (27 kB)
+Collecting regex!=2019.12.17 (from diffusers<0.36.0,>=0.27.2->lerobot==0.4.4)
+  Downloading regex-2026.9.29-cp313-cp313-win_amd64.whl (280 kB)
+Requirement already satisfied: Pillow in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from diffusers<0.36.0,>=0.27.2->lerobot==0.4.4) (12.3.0)
+Collecting aiohttp!=4.0.0a0,!=4.0.0a1 (from fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading aiohttp-3.14.5-cp313-cp313-win_amd64.whl (505 kB)
+Collecting cloudpickle>=1.2.0 (from gymnasium<2.0.0,>=1.1.1->lerobot==0.4.4)
+  Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Requirement already satisfied: typing-extensions>=4.12.0 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from gymnasium<2.0.0,>=1.1.1->lerobot==0.4.4) (4.16.0)
+Collecting farama-notifications>=0.0.1 (from gymnasium<2.0.0,>=1.1.1->lerobot==0.4.4)
+  Downloading farama_notifications-0.0.6-py3-none-any.whl (2.9 kB)
+Collecting InquirerPy==0.3.4 (from huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading InquirerPy-0.3.4-py3-none-any.whl (67 kB)
+Collecting hf-transfer>=0.1.4 (from huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading hf_transfer-0.1.9-cp38-abi3-win_amd64.whl (1.2 MB)
+     ---------------------------------------- 1.2/1.2 MB 3.8 MB/s  0:00:00
+Collecting pfzy<0.4.0,>=0.3.1 (from InquirerPy==0.3.4->huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading pfzy-0.3.4-py3-none-any.whl (8.5 kB)
+Collecting prompt-toolkit<4.0.0,>=3.0.1 (from InquirerPy==0.3.4->huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading prompt_toolkit-3.0.53-py3-none-any.whl (392 kB)
+Collecting imageio-ffmpeg (from imageio[ffmpeg]<3.0.0,>=2.34.0->lerobot==0.4.4)
+  Downloading imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl (31.2 MB)
+     ---------------------------------------- 31.2/31.2 MB 5.8 MB/s  0:00:05
+Collecting attrs>=19.2.0 (from jsonlines<5.0.0,>=4.0.0->lerobot==0.4.4)
+  Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+Collecting numpy (from lerobot==0.4.4)
+  Downloading numpy-2.2.6-cp313-cp313-win_amd64.whl (12.6 MB)
+     ---------------------------------------- 12.6/12.6 MB 6.2 MB/s  0:00:02
+Collecting wcwidth>=0.1.4 (from prompt-toolkit<4.0.0,>=3.0.1->InquirerPy==0.3.4->huggingface-hub[cli,hf-transfer]<0.36.0,>=0.34.2->lerobot==0.4.4)
+  Downloading wcwidth-0.9.2-cp310-abi3-win_amd64.whl (597 kB)
+     ---------------------------------------- 597.8/597.8 kB 3.1 MB/s  0:00:00
+Collecting six (from pynput<1.9.0,>=1.7.7->lerobot==0.4.4)
+  Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+INFO: pip is looking at multiple versions of pyorbbecsdk2 to determine which version is compatible with other requirements. This could take a while.
+Collecting pyorbbecsdk2<3.0.0,>=2.0.15 (from lerobot==0.4.4)
+  Downloading pyorbbecsdk2-2.1.1-cp313-cp313-win_amd64.whl (17.5 MB)
+     ---------------------------------------- 17.5/17.5 MB 7.3 MB/s  0:00:02
+  Downloading pyorbbecsdk2-2.0.18-cp313-cp313-win_amd64.whl (3.6 MB)
+     ---------------------------------------- 3.6/3.6 MB 6.6 MB/s  0:00:00
+Requirement already satisfied: sympy>=1.13.3 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from torch<2.8.0,>=2.2.1->lerobot==0.4.4) (1.14.0)
+Requirement already satisfied: networkx in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from torch<2.8.0,>=2.2.1->lerobot==0.4.4) (3.7)
+Requirement already satisfied: jinja2 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from torch<2.8.0,>=2.2.1->lerobot==0.4.4) (3.1.6)
+Collecting mypy-extensions>=0.3.0 (from typing-inspect~=0.9.0->draccus==0.10.0->lerobot==0.4.4)
+  Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Collecting click>=8.0.1 (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Collecting gitpython!=3.1.29,>=1.0.0 (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading gitpython-3.2.1-py3-none-any.whl (231 kB)
+Collecting platformdirs (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading platformdirs-4.13.3-py3-none-any.whl (32 kB)
+Collecting protobuf!=4.21.0,!=5.28.0,<7,>=3.19.0 (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading protobuf-6.33.6-cp310-abi3-win_amd64.whl (437 kB)
+Collecting pydantic<3 (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading pydantic-2.14.1-py3-none-any.whl (488 kB)
+Collecting sentry-sdk>=2.0.0 (from wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading sentry_sdk-2.72.0-py3-none-any.whl (544 kB)
+     ---------------------------------------- 544.8/544.8 kB 4.9 MB/s  0:00:00
+Collecting annotated-types>=0.6.0 (from pydantic<3->wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Collecting pydantic-core==2.50.1 (from pydantic<3->wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading pydantic_core-2.50.1-cp313-cp313-win_amd64.whl (2.2 MB)
+     ---------------------------------------- 2.2/2.2 MB 4.2 MB/s  0:00:00
+Collecting typing-inspection>=0.4.4 (from pydantic<3->wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.32.2->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading charset_normalizer-3.5.2-cp313-cp313-win_amd64.whl (206 kB)
+Collecting idna<4,>=2.5 (from requests>=2.32.2->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading idna-3.20-py3-none-any.whl (69 kB)
+Collecting urllib3<3,>=1.26 (from requests>=2.32.2->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Collecting certifi>=2023.5.7 (from requests>=2.32.2->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Collecting aiosignal>=1.4.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Collecting frozenlist>=1.1.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading frozenlist-1.8.0-cp313-cp313-win_amd64.whl (43 kB)
+Collecting multidict<8.0,>=4.5 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading multidict-7.1.0-cp313-cp313-win_amd64.whl (93 kB)
+Collecting propcache>=0.2.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading propcache-0.5.4-cp313-cp313-win_amd64.whl (45 kB)
+Collecting yarl<2.0,>=1.25.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.9.0,>=2023.1.0->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading yarl-1.25.1-cp313-cp313-win_amd64.whl (101 kB)
+Collecting gitdb<5,>=4.0.1 (from gitpython!=3.1.29,>=1.0.0->wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading gitdb-4.0.12-py3-none-any.whl (62 kB)
+Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython!=3.1.29,>=1.0.0->wandb<0.25.0,>=0.24.0->lerobot==0.4.4)
+  Downloading smmap-5.0.3-py3-none-any.whl (24 kB)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from sympy>=1.13.3->torch<2.8.0,>=2.2.1->lerobot==0.4.4) (1.3.0)
+Collecting colorama (from tqdm>=4.66.3->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Collecting zipp>=3.20 (from importlib_metadata->diffusers<0.36.0,>=0.27.2->lerobot==0.4.4)
+  Downloading zipp-4.1.1-py3-none-any.whl (10 kB)
+Requirement already satisfied: MarkupSafe>=2.0 in D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\.venv\Lib\site-packages (from jinja2->torch<2.8.0,>=2.2.1->lerobot==0.4.4) (3.0.4)
+Collecting python-dateutil>=2.8.2 (from pandas->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Collecting tzdata (from pandas->datasets<4.2.0,>=4.0.0->lerobot==0.4.4)
+  Downloading tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+Building wheels for collected packages: lerobot, feetech-servo-sdk
+  Building editable for lerobot (pyproject.toml): started
+  Building editable for lerobot (pyproject.toml): finished with status 'done'
+  Created wheel for lerobot: filename=lerobot-0.4.4-0.editable-py3-none-any.whl size=12804 sha256=7eae316fe3345504f67bf36c2fb77517453bdbc031388133ffb96eac62ac7f98
+  Stored in directory: C:\Users\LotusWong\AppData\Local\Temp\pip-ephem-wheel-cache-71atcg2q\wheels\df\b4\f7\4f9c4d555bc786ee8485524735e8f1ccd7fe1f9239ba705c9d
+  Building wheel for feetech-servo-sdk (pyproject.toml): started
+  Building wheel for feetech-servo-sdk (pyproject.toml): finished with status 'done'
+  Created wheel for feetech-servo-sdk: filename=feetech_servo_sdk-1.0.0-py3-none-any.whl size=10250 sha256=8abc4b1fbb4762a55b8fa688f69d1b7efb608d95621bd7ee6b06c93995a8d8a8
+  Stored in directory: c:\users\lotuswong\appdata\local\pip\cache\wheels\0f\67\40\61dc569a76a6d50b55bcc4a8668101afd078d0cc816ec19f42
+Successfully built lerobot feetech-servo-sdk
+Installing collected packages: pyserial, pyorbbecsdk2, farama-notifications, zipp, xxhash, wcwidth, urllib3, tzdata, typing-inspection, toml, termcolor, smmap, six, setuptools, safetensors, regex, pyyaml, pygame, pydantic-core, pybind11-global, pybind11, pyarrow, psutil, protobuf, propcache, platformdirs, pfzy, packaging, orderly-set, numpy, mypy-extensions, multidict, mergedeep, imageio-ffmpeg, idna, hf-transfer, fsspec, frozenlist, feetech-servo-sdk, einops, dill, colorama, cmake, cloudpickle, click, charset_normalizer, certifi, av, attrs, annotated-types, aiohappyeyeballs, yarl, typing-inspect, tqdm, sentry-sdk, rerun-sdk, requests, pyyaml-include, python-dateutil, pynput, pydantic, prompt-toolkit, opencv-python-headless, opencv-python, multiprocess, jsonlines, importlib_metadata, imageio, gymnasium, gitdb, deepdiff, aiosignal, pandas, InquirerPy, huggingface-hub, gitpython, draccus, aiohttp, wandb, diffusers, accelerate, datasets, lerobot
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 84.0.0
+    Uninstalling setuptools-84.0.0:
+      Successfully uninstalled setuptools-84.0.0
+  Attempting uninstall: packaging
+    Found existing installation: packaging 26.3
+    Uninstalling packaging-26.3:
+      Successfully uninstalled packaging-26.3
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.5.4
+    Uninstalling numpy-2.5.4:
+      Successfully uninstalled numpy-2.5.4
+  Attempting uninstall: fsspec
+    Found existing installation: fsspec 2026.9.0
+    Uninstalling fsspec-2026.9.0:
+      Successfully uninstalled fsspec-2026.9.0
+
+Successfully installed InquirerPy-0.3.4 accelerate-1.15.0 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 annotated-types-0.8.0 attrs-26.1.0 av-15.1.0 certifi-2026.7.22 charset_normalizer-3.5.2 click-8.5.0 cloudpickle-3.1.2 cmake-4.1.3 colorama-0.4.6 datasets-4.1.1 deepdiff-8.6.2 diffusers-0.35.2 dill-0.4.0 draccus-0.10.0 einops-0.8.2 farama-notifications-0.0.6 feetech-servo-sdk-1.0.0 frozenlist-1.8.0 fsspec-2025.9.0 gitdb-4.0.12 gitpython-3.2.1 gymnasium-1.4.0 hf-transfer-0.1.9 huggingface-hub-0.35.3 idna-3.20 imageio-2.38.1 imageio-ffmpeg-0.6.0 importlib_metadata-9.0.1 jsonlines-4.0.0 lerobot-0.4.4 mergedeep-1.3.4 multidict-7.1.0 multiprocess-0.70.16 mypy-extensions-1.1.0 numpy-2.2.6 opencv-python-4.12.0.88 opencv-python-headless-4.12.0.88 orderly-set-5.5.0 packaging-25.0 pandas-3.0.6 pfzy-0.3.4 platformdirs-4.13.3 prompt-toolkit-3.0.53 propcache-0.5.4 protobuf-6.33.6 psutil-7.2.2 pyarrow-26.0.0 pybind11-2.12.0 pybind11-global-2.12.0 pydantic-2.14.1 pydantic-core-2.50.1 pygame-2.6.1 pynput-1.8.2 pyorbbecsdk2-2.0.18 pyserial-3.5 python-dateutil-2.9.0.post0 pyyaml-6.0.3 pyyaml-include-1.4.1 regex-2026.9.29 requests-2.34.2 rerun-sdk-0.26.2 safetensors-0.8.0 sentry-sdk-2.72.0 setuptools-80.10.2 six-1.17.0 smmap-5.0.3 termcolor-3.3.0 toml-0.10.2 tqdm-4.70.1 typing-inspect-0.9.0 typing-inspection-0.4.4 tzdata-2026.5 urllib3-2.8.0 wandb-0.24.2 wcwidth-0.9.2 xxhash-4.0.1 yarl-1.25.1 zipp-4.1.1
+torch        2.7.1+cu128 | cuda: True
+av           15.1.0 | libsvtav1: True
+lerobot      D:\���紴��ʵ����\����װ��ʵ���� m1��е��ץȡ\LeRobot\lerobot\src\lerobot\__init__.py

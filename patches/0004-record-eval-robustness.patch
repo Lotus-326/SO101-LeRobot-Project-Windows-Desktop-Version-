@@ -1,0 +1,216 @@
+diff --git a/src/lerobot/scripts/lerobot_record.py b/src/lerobot/scripts/lerobot_record.py
+index ba18080f..75fc535f 100644
+--- a/src/lerobot/scripts/lerobot_record.py
++++ b/src/lerobot/scripts/lerobot_record.py
+@@ -221,6 +221,23 @@ class RecordConfig:
+     play_sounds: bool = True
+     # Resume recording on an existing dataset.
+     resume: bool = False
++    # ---- LOCAL PATCH: reset 阶段自动回到起始姿势 ----------------------------
++    # 形如 "shoulder_pan:-33,shoulder_lift:13,elbow_flex:-15,wrist_flex:88,
++    #        wrist_roll:-2,gripper:17"（归一化值：体关节 -100~100，夹爪 0~100）
++    #
++    # 为什么需要：`lerobot-record --policy.path=...` 做评估时 teleop 为 None，
++    # 回合之间的 reset 阶段没有任何动作来源 —— 机械臂会停在上一回合结束的
++    # 姿态上。于是每条 episode 都从不同的起始姿态开始，而训练数据里起始姿态
++    # 基本是一致的。这种分布偏移会显著拉低评估成功率（实测 0/10）。
++    # 给了这个参数后，reset 阶段会自动把从臂平滑开回该姿势，
++    # 每条 episode 的起始条件就变成可复现的了。
++    reset_home_pose: str | None = None
++    # ---- LOCAL PATCH: 动作一阶低通系数 -----------------------------------
++    # 0<alpha<1：对送给机械臂的指令做指数滑动平均，抑制策略"逐段重规划"造成
++    # 的原地抖动（实测 n_action_steps=10 时会出现停在方块上方左右摇摆）。
++    # alpha≈0.35 的时间常数约 0.1 秒，只压高频、不改轨迹形状。
++    # None/1.0 = 不过滤（默认，与上游行为一致）。
++    action_smooth: float | None = None
+ 
+     def __post_init__(self):
+         # HACK: We parse again the cli args here to get the pretrained path if there was one.
+@@ -294,6 +311,14 @@ def record_loop(
+     single_task: str | None = None,
+     display_data: bool = False,
+     display_compressed_images: bool = False,
++    # ---- LOCAL PATCH: reset 阶段的目标姿势 -------------------------------
++    # dict，键形如 "shoulder_pan.pos"，值是该关节的归一化目标位置。
++    # 只有在该阶段既没有策略也没有遥操作时才会用到（见下方 else 分支）。
++    home_action: dict | None = None,
++    # ---- LOCAL PATCH: 动作一阶低通系数 -----------------------------------
++    # 0<alpha<1：对送出的指令做指数滑动平均，抑制策略逐段重规划造成的抖动。
++    # None 或 1.0：不过滤（原行为）。
++    action_smooth: float | None = None,
+ ):
+     if dataset is not None and dataset.fps != fps:
+         raise ValueError(f"The dataset fps should be equal to requested fps ({dataset.fps} != {fps}).")
+@@ -336,6 +361,12 @@ def record_loop(
+     # timestamp 就直接越过 control_time_s，episode 会立刻结束。
+     # 所以累计暂停时长，算 timestamp 时扣掉。
+     paused_total = 0.0
++    # ---- LOCAL PATCH: 无动作来源时的空转计数器（见下方 else 分支）------------
++    _idle_logged = False
++    # reset 阶段自动回起始位的到位提示只打一次
++    _home_logged = False
++    # 动作低通用的上一条指令（空 dict 表示还没有）
++    _prev_cmd: dict = {}
+     while timestamp < control_time_s:
+         start_loop_t = time.perf_counter()
+ 
+@@ -401,11 +432,53 @@ def record_loop(
+             act = {**arm_action, **base_action} if len(base_action) > 0 else arm_action
+             act_processed_teleop = teleop_action_processor((act, obs))
+         else:
+-            logging.info(
+-                "No policy or teleoperator provided, skipping action generation."
+-                "This is likely to happen when resetting the environment without a teleop device."
+-                "The robot won't be at its rest position at the start of the next episode."
+-            )
++            # ---- LOCAL PATCH: reset 阶段（无策略、无遥操作）不能空转 -----------
++            # 场景：`lerobot-record --policy.path=...` 做策略评估时，teleop 为 None。
++            #       episode 阶段由策略驱动；但每条之间的 reset 阶段两个来源都没有，
++            #       就落进了这个 else 分支。
++            #
++            # 原代码直接 `continue`，同时跳过了循环末尾的两件必要工作：
++            #   ① `precise_sleep(...)` —— 结果是以最高速度死循环，10 秒刷几百行
++            #      日志、吃满一个 CPU 核；
++            #   ② `timestamp = ...` —— 循环条件 `while timestamp < control_time_s`
++            #      因此永远成立，**reset 阶段永远不会结束**，只能靠 Ctrl+C 或
++            #      按键脱身。也就是说评估最多只能跑完第 1 条，后面全卡住。
++            #
++            # 对策：照常按 fps 节流、照常推进 timestamp；提示只打一次。
++            # -------------------------------------------------------------------
++            if not _idle_logged:
++                _idle_logged = True
++                logging.info(
++                    "No policy or teleoperator provided for this phase "
++                    "(expected during reset): robot holds still, "
++                    "counting down %.0fs.",
++                    control_time_s,
++                )
++            # ---- LOCAL PATCH: 自动把从臂开回起始姿势 ------------------------
++            # 每帧最多移动 HOME_STEP 个归一化单位（约 2.5 ≈ 2.8°/帧 ≈ 84°/s），
++            # 平滑逼近，避免 position 目标一下子跳太远导致机械臂猛冲。
++            # 到位后自然保持（增量变成 0）。
++            # ---------------------------------------------------------------
++            if home_action:
++                HOME_STEP = 2.5
++                step_cmd = {}
++                for k, target in home_action.items():
++                    if k not in obs:
++                        continue
++                    cur_v = float(obs[k])
++                    delta = float(target) - cur_v
++                    step_cmd[k] = cur_v + max(-HOME_STEP, min(HOME_STEP, delta))
++                if step_cmd:
++                    robot.send_action(step_cmd)
++                    if not _home_logged and all(
++                        abs(float(home_action[k]) - float(obs[k])) <= HOME_STEP + 1e-6
++                        for k in home_action if k in obs
++                    ):
++                        _home_logged = True
++                        logging.info("reset: 已回到起始姿势，等待倒计时结束")
++            dt_s = time.perf_counter() - start_loop_t
++            precise_sleep(max(1 / fps - dt_s, 0.0))
++            timestamp = time.perf_counter() - start_episode_t - paused_total
+             continue
+ 
+         # Applies a pipeline to the action, default is IdentityProcessor
+@@ -416,6 +489,30 @@ def record_loop(
+             action_values = act_processed_teleop
+             robot_action_to_send = robot_action_processor((act_processed_teleop, obs))
+ 
++        # ---- LOCAL PATCH: 动作一阶低通（抑制策略抖动）-------------------------
++        # 背景：ACT 的 select_action 在队列耗尽时会【丢掉上一段的剩余动作、从头
++        #   重算】。n_action_steps 较小时（如 10 帧），若策略在新观测下给出方向
++        #   相反的小修正，指令就会逐段来回，机械臂表现为"原地快速小幅摇摆"
++        #   （实测：停在方块上方不下降）。
++        # 对策：对送出去的指令做指数滑动平均 —— 只压制高频抖动，不改变轨迹的
++        #   低频形状（alpha=0.35 时时间常数约 0.1 秒）。
++        #   alpha 越小越平滑但滞后越大；None 或 1.0 表示不过滤。
++        # ---------------------------------------------------------------------
++        if action_smooth is not None and 0.0 < action_smooth < 1.0:
++            if not _prev_cmd:
++                _prev_cmd.update({k: float(v) for k, v in robot_action_to_send.items()})
++            else:
++                blended = {}
++                for k, v in robot_action_to_send.items():
++                    v = float(v)
++                    if k not in _prev_cmd:
++                        _prev_cmd[k] = v
++                        blended[k] = v
++                    else:
++                        blended[k] = _prev_cmd[k] + action_smooth * (v - _prev_cmd[k])
++                        _prev_cmd[k] = blended[k]
++                robot_action_to_send = blended
++
+         # Send action to robot
+         # Action can eventually be clipped using `max_relative_target`,
+         # so action actually sent is saved in the dataset. action = postprocessor.process(action)
+@@ -451,6 +548,23 @@ def record(cfg: RecordConfig) -> LeRobotDataset:
+         else cfg.display_compressed_images
+     )
+ 
++    # ---- LOCAL PATCH: 解析 reset 阶段的起始姿势 ----------------------------
++    home_action = None
++    if cfg.reset_home_pose:
++        home_action = {}
++        for pair in cfg.reset_home_pose.split(","):
++            pair = pair.strip()
++            if not pair:
++                continue
++            if ":" not in pair:
++                raise ValueError(
++                    f"--reset_home_pose 格式应为 'joint:value,joint:value,...'，"
++                    f"无法解析 {pair!r}"
++                )
++            k, v = pair.split(":", 1)
++            home_action[f"{k.strip()}.pos"] = float(v)
++        logging.info("reset 阶段将自动回到起始姿势: %s", home_action)
++
+     robot = make_robot_from_config(cfg.robot)
+     teleop = make_teleoperator_from_config(cfg.teleop) if cfg.teleop is not None else None
+ 
+@@ -546,6 +660,8 @@ def record(cfg: RecordConfig) -> LeRobotDataset:
+                     single_task=cfg.dataset.single_task,
+                     display_data=cfg.display_data,
+                     display_compressed_images=display_compressed_images,
++                    # LOCAL PATCH: 动作低通，抑制策略重规划造成的原地抖动
++                    action_smooth=cfg.action_smooth,
+                 )
+ 
+                 # Execute a few seconds without recording to give time to manually reset the environment
+@@ -570,6 +686,8 @@ def record(cfg: RecordConfig) -> LeRobotDataset:
+                         control_time_s=cfg.dataset.reset_time_s,
+                         single_task=cfg.dataset.single_task,
+                         display_data=cfg.display_data,
++                        # LOCAL PATCH: reset 阶段自动回起始姿势（没有遥操作时生效）
++                        home_action=home_action if teleop is None else None,
+                     )
+ 
+                 if events["rerecord_episode"]:
+@@ -579,6 +697,27 @@ def record(cfg: RecordConfig) -> LeRobotDataset:
+                     dataset.clear_episode_buffer()
+                     continue
+ 
++                # ---- LOCAL PATCH: 0 帧 episode 保护 -------------------------
++                # 场景（评估时很容易碰到）：一条刚跑完，你在 reset 阶段按 `→`
++                #   想跳过等待。`exit_early` 只是个布尔标志，按键重复时会被
++                #   设置两次 —— reset 循环消费掉一次，另一次残留到下一个
++                #   episode 的循环开头，于是它第一轮就 break，缓冲区里
++                #   `size == 0`，紧接着 `save_episode()` 抛：
++                #     ValueError: You must add one or several frames with
++                #                 `add_frame` before calling `add_episode`.
++                #   整轮评估就此中断（前面的都白跑）。
++                # 对策：帧数为 0 时跳过保存并重录这一条，别让它炸掉整轮。
++                # -------------------------------------------------------------
++                _buf = getattr(dataset, "episode_buffer", None)
++                if not _buf or _buf.get("size", 0) == 0:
++                    logging.warning(
++                        "本回合录到 0 帧（该阶段被提前结束），跳过保存并重录这一条。"
++                        "评估期间请勿按方向键 —— 回合和 reset 都会自动倒计时。"
++                    )
++                    dataset.clear_episode_buffer()
++                    events["exit_early"] = False
++                    continue
++
+                 dataset.save_episode()
+                 recorded_episodes += 1
+     finally:

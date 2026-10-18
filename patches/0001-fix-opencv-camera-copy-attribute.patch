@@ -1,0 +1,34 @@
+diff --git a/src/lerobot/cameras/utils.py b/src/lerobot/cameras/utils.py
+index d183fd42..b550ea73 100644
+--- a/src/lerobot/cameras/utils.py
++++ b/src/lerobot/cameras/utils.py
+@@ -28,13 +28,25 @@ if TYPE_CHECKING:
+ 
+ 
+ def _resolve_opencv_copy_source(camera_config: "OpenCVCameraConfig") -> str | None:
+-    if camera_config.copy is False:
++    # ---- LOCAL PATCH (Seeed DepthCameraSupport 分支的 bug) --------------------
++    # 本分支的 OpenCVCameraConfig 并没有 `copy` 字段（那是上游更新版本才加的），
++    # 原代码直接写 `camera_config.copy` 会抛：
++    #     AttributeError: 'OpenCVCameraConfig' object has no attribute 'copy'
++    # 触发点是 make_cameras_from_configs()，也就是【任何】用到 opencv 相机的
++    # 遥操作 / 数据采集 / 评估命令都会在构造机器人时直接崩溃。
++    # 同时本分支的 OpenCVCamera.__init__ 也不接受 source_camera / source_key，
++    # 说明「多路逻辑相机共享同一路物理流」这个特性在该分支尚未真正实现，
++    # 因此这里统一按「不共享」处理。
++    # 上游修复后可以删掉本补丁（见 patches/ 目录）。
++    # -------------------------------------------------------------------------
++    copy = getattr(camera_config, "copy", False)
++    if copy is False:
+         return None
+ 
+-    if isinstance(camera_config.copy, int):
+-        return f"camera{camera_config.copy}"
++    if isinstance(copy, int):
++        return f"camera{copy}"
+ 
+-    return camera_config.copy
++    return copy
+ 
+ 
+ def make_cameras_from_configs(camera_configs: dict[str, CameraConfig]) -> dict[str, Camera]:

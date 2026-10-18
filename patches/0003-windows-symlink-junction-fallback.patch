@@ -1,0 +1,80 @@
+diff --git a/src/lerobot/utils/train_utils.py b/src/lerobot/utils/train_utils.py
+index d8481f4b..d7a866b6 100644
+--- a/src/lerobot/utils/train_utils.py
++++ b/src/lerobot/utils/train_utils.py
+@@ -13,6 +13,9 @@
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
++import logging
++import os
++import subprocess
+ from pathlib import Path
+ 
+ from torch.optim import Optimizer
+@@ -56,10 +59,62 @@ def load_training_step(save_dir: Path) -> int:
+ 
+ def update_last_checkpoint(checkpoint_dir: Path) -> Path:
+     last_checkpoint_dir = checkpoint_dir.parent / LAST_CHECKPOINT_LINK
+-    if last_checkpoint_dir.is_symlink():
+-        last_checkpoint_dir.unlink()
++
++    # ---- LOCAL PATCH: 清理旧的 last 链接（兼容 Windows junction）-------------
++    # `Path.is_symlink()` 对 Windows 目录 junction 返回 **False**（junction 是
++    # reparse point，不是 symlink）。所以不能只判断 is_symlink。
++    # 也【绝不能用 shutil.rmtree】：Python 认为 junction 不是链接，
++    # 会递归进去把**目标目录的内容真删掉**。
++    # os.rmdir() 正好只删 junction 本身（或空目录），不动目标内容。
++    # -------------------------------------------------------------------------
++    try:
++        if last_checkpoint_dir.is_symlink():
++            last_checkpoint_dir.unlink()
++        elif last_checkpoint_dir.exists():
++            os.rmdir(last_checkpoint_dir)
++    except OSError:
++        pass
++
+     relative_target = checkpoint_dir.relative_to(checkpoint_dir.parent)
+-    last_checkpoint_dir.symlink_to(relative_target)
++
++    try:
++        last_checkpoint_dir.symlink_to(relative_target)
++        return last_checkpoint_dir
++    except OSError as exc:
++        # ---- LOCAL PATCH: Windows 上退化到目录 junction ----------------------
++        # 现象：OSError: [WinError 1314] 客户端没有所需的特权
++        # 原因：Windows 创建符号链接需要【管理员权限】或开启【开发者模式】。
++        # 后果（原代码）：在【每一次存盘】时崩溃。save_freq=20000 时，
++        #   正式训练会在第 2 万步（约 40 分钟）直接挂掉，而不是跑完才挂。
++        # 对策：目录 junction（`mklink /J`）普通用户即可创建，且对 Python
++        #   的 Path.exists()/open() 完全透明，等价于符号链接。
++        # 再失败就只写一个指针文件并告警 —— 绝不让整个训练因为一个快捷方式而崩。
++        # ---------------------------------------------------------------------
++        logging.warning(
++            "创建符号链接 %s 失败（%s），尝试退化为目录 junction ……",
++            last_checkpoint_dir, exc,
++        )
++        try:
++            subprocess.run(
++                ["cmd", "/c", "mklink", "/J",
++                 str(last_checkpoint_dir.with_name(last_checkpoint_dir.name)),
++                 str(checkpoint_dir)],
++                check=True, capture_output=True,
++            )
++            logging.warning("已用目录 junction 代替符号链接（功能等价）: %s", last_checkpoint_dir)
++        except Exception as exc2:  # noqa: BLE001
++            ptr = checkpoint_dir.parent / f"{LAST_CHECKPOINT_LINK}.txt"
++            try:
++                ptr.write_text(checkpoint_dir.name, encoding="utf-8")
++            except Exception:  # noqa: BLE001
++                pass
++            logging.warning(
++                "junction 也失败（%s）。已写指针文件 %s = %s；训练继续，"
++                "但 `checkpoints/last` 这条路径不可用，请改用带步数的目录"
++                "（如 checkpoints/010000/pretrained_model）。",
++                exc2, ptr.name, checkpoint_dir.name,
++            )
++        return last_checkpoint_dir
+ 
+ 
+ def save_checkpoint(

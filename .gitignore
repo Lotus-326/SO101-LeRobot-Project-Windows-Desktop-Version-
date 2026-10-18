@@ -1,0 +1,52 @@
+# ============================================================
+#  SO-ARM101 x LeRobot 项目 .gitignore
+#  原则：只提交【可复现的源码 / 文档 / 证据】，
+#        可重新下载或体积极大的东西一律排除。
+#        重建方法见 README「仓库说明」一节。
+# ============================================================
+
+# ---------- Python 虚拟环境（6.9 GB，用 setup-env.ps1 重建）----------
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ---------- LeRobot 仓库本体（675 MB，setup-env.ps1 会自动 clone）----------
+# 本项目对它的所有修改都已固化成 patches/*.patch，
+# 重新 clone 后跑 scripts\apply-patches.ps1 即可完整重建。
+# 训练产物（checkpoints）也在里面，所以整目录排除。
+lerobot/
+
+# ---------- 外部工具（688 MB，按需下载 / 克隆）----------
+tools/ffmpeg-master-latest-win64-gpl/
+tools/Seeed_RoboController/
+tools/*.zip
+
+# ---------- 运行产物 ----------
+outputs/
+runs/
+wandb/
+*.rrd
+.reasonix/
+Log/
+
+# ---------- 日志：默认忽略，只保留训练曲线作为证据 ----------
+logs/*
+!logs/train-act.log
+!logs/setup-env.log
+
+# ---------- 数据与模型（默认在 HF 缓存里，不在仓库内）----------
+datasets/
+checkpoints/
+*.safetensors
+*.mp4
+
+# ---------- 编辑器 / 系统 ----------
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
