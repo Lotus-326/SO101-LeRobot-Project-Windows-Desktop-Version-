@@ -181,7 +181,12 @@ if (-not $tcFiles) {
                     $problems += "train_config.json output_dir"
                 } else {
                     $json.output_dir = $newDir
-                    $json | ConvertTo-Json -Depth 60 | Set-Content -Path $tc -Encoding UTF8
+                    # 注意：不能用 Set-Content -Encoding UTF8
+                    # PowerShell 5.1 那样写会加 UTF-8 BOM，而 json.loads 遇到 BOM 会报
+                    # Unexpected UTF-8 BOM -> -Resume 续训直接失败。必须写无 BOM 的 UTF-8。
+                    $jsonText = $json | ConvertTo-Json -Depth 60
+                    [System.IO.File]::WriteAllText(
+                        $tc, $jsonText, (New-Object System.Text.UTF8Encoding($false)))
                     Write-Ok "已更新 output_dir（只影响 -Resume 续训）"
                     $fixed++
                 }
