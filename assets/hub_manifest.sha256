@@ -1,0 +1,55 @@
+# HuggingFace Hub 归档清单（sha256）
+# 生成时间: 2026-10-18 17:35:12
+# 用途: 本地副本删除后，从 Hub 拉回时可据此核对完整性
+# 校验方法: python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" <文件>
+
+## model: LotusWong/so101-act-m1-pick-cube
+## 本地原路径: D:\LeRobot\lerobot\outputs\train\act_m1_pick_cube\checkpoints\040000\pretrained_model
+6b3a32783a5b297a242b151fe503335191fa500bfcf5b367aa40b6d5610fadd2        1555  config.json
+6f1000c4aa47e3739456d64d3985cf140b044e9bffb1d9184e4c4d35c6d847a3   206699736  model.safetensors
+e359584c9f74e9c6ffe6f801512642d97bb15610a7879e245bda5269b7d6dcc1         691  policy_postprocessor.json
+0c84d59e25fd362dd0a9121248092b508ac9e4e3462d056e0dab7257e85d48f5        6560  policy_postprocessor_step_0_unnormalizer_processor.safetensors
+6905a1b83f05e91b39a886499f5c14247c70cffff4112c91957996f92244f262        1209  policy_preprocessor.json
+0c84d59e25fd362dd0a9121248092b508ac9e4e3462d056e0dab7257e85d48f5        6560  policy_preprocessor_step_3_normalizer_processor.safetensors
+34e28f9e84786d7bf35a7af3ac1b8feb80081dfa1612e3f9b9ce72b408e4c2e1       11952  train_config.json
+## 小计 7 个文件, 197.2 MB
+
+## dataset: LotusWong/m1-pick-cube-clean
+## 本地原路径: C:\Users\LotusWong\.cache\huggingface\lerobot\seeedstudio123\m1_pick_cube_clean
+c4d8cc6d2ddf2cb3faa99fd60b0d0f1289d38d48a7266aa9571cb08ae14ce24a      150603  data/chunk-000/file-000.parquet
+318e8b89502675b1cd7e5c587453c943e3b9c32e91c280146904534615c0cff9      146672  data/chunk-000/file-001.parquet
+d6cdde3a74effcf8dfd76d4662bf28b477bebbd2bef5cbfb53b7e455a1d36180      115525  data/chunk-000/file-002.parquet
+f11b6c32cc510e1b47bd782732945ff38dd4f176a3f56dbb0f0db2cd864c1ad6      120693  data/chunk-000/file-003.parquet
+063e3df5fa4241db0e10463ccbd4affd05516e975ed16f578f28cd5387dce3c4      111383  data/chunk-000/file-004.parquet
+9d22559ce19e2a453af0067c6fc31ddaf15990c20ce5191097b7f2b6e37466fc      376376  meta/episodes/chunk-000/file-000.parquet
+d9e2d9ab5a79f8a5b3d86e07005dceddb89b493d0c25bd98df500625781463b1        2696  meta/info.json
+4a7948d76e1df7c5f048627e26a826c8bf67e50c8cd03f18ceef42ad410b2728       10423  meta/stats.json
+04af4794fd9d144faf6bbe6b9e3c83ad72203bad1fe9d9e69b14d94526ae34e7        2282  meta/tasks.parquet
+cccb0c04140f2187664ab13279a5e087f9a25c8862232229028ef31f3e9bf395    69390221  videos/observation.images.front/chunk-000/file-000.mp4
+638c92d545830e4f02e6eff6e2d9f493f9ca5ed98d620e580f8f0cbd09eba171    73357160  videos/observation.images.front/chunk-000/file-001.mp4
+e4993ee7022e86a870764a3b08efc2d2356a281fc9c98b24593d6f15a927ac58    65123271  videos/observation.images.front/chunk-000/file-002.mp4
+5250d441ccc753bca65bdaba4454b3ef26ffbd146a61a554e87145977801b742    49331873  videos/observation.images.front/chunk-000/file-003.mp4
+99ccf6458962f0262731b42e04ba169233c0528e0e696a60fd2820466456f212    54184374  videos/observation.images.front/chunk-000/file-004.mp4
+## 小计 14 个文件, 298.0 MB
+
+## dataset: LotusWong/eval-base-v2
+## 本地原路径: C:\Users\LotusWong\.cache\huggingface\lerobot\seeedstudio123\eval_base_v2
+e8ebc8f4c5d23f781972a3821bdcafa4c2fc7e648d5c2330ddebd74c81c24495      569035  data/chunk-000/file-000.parquet
+07fb26ae968787c8a5dfb5e063f540f93b27bf72d2c3a1403289b116483dd49a       56300  meta/episodes/chunk-000/file-000.parquet
+d53c70720a2ebd203d8839baaa470afb90ef2e241cd4c414b4cb86aee2220a4f        2695  meta/info.json
+5a7b2c18d24944bdd56545e2e13cd56141e621c31b431e73c0c9f7bd78154ff4       10421  meta/stats.json
+04af4794fd9d144faf6bbe6b9e3c83ad72203bad1fe9d9e69b14d94526ae34e7        2282  meta/tasks.parquet
+eb52239a8423607afe9342f557a4adc5613802d78c38ac49131692ed0b4b8bdb   135667850  videos/observation.images.front/chunk-000/file-000.mp4
+## 小计 6 个文件, 130.0 MB
+
+## dataset: LotusWong/eval-fixed-p1
+## 本地原路径: C:\Users\LotusWong\.cache\huggingface\lerobot\seeedstudio123\eval_fixed_p1
+21224f69bb683fe6700387283460fd7a9c9bbfb01e887123cb51929a857c909b      299544  data/chunk-000/file-000.parquet
+6a73246124cfb9544790e14c51b4a9c22c3c49d4920315249c6207c955608755       56303  meta/episodes/chunk-000/file-000.parquet
+d8b375dd49bcbf2cb4cf1239bc0530b1d1d84ff4e0623db764f3d386f02e85d5        2695  meta/info.json
+f63ab628e6b5bcdcf12cedf7f55de72e3e61f78e8f47ef4c60a23709d9b1ce84       10419  meta/stats.json
+04af4794fd9d144faf6bbe6b9e3c83ad72203bad1fe9d9e69b14d94526ae34e7        2282  meta/tasks.parquet
+8363661418debfd9e13977c835b3853e493a1a9fbbd378eae4c5242e890c95a3    65230669  videos/observation.images.front/chunk-000/file-000.mp4
+## 小计 6 个文件, 62.6 MB
+
+# 总计 33 个文件, 687.7 MB
