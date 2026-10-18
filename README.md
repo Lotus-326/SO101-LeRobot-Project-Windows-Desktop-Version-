@@ -12,6 +12,7 @@
 
 ## 目录
 
+- [仓库说明：这里有什么、没什么、怎么重建](#仓库说明这里有什么没什么怎么重建)
 - [一、项目成果（先看结论）](#一项目成果先看结论)
 - [二、硬件与环境](#二硬件与环境)
 - [三、目录结构](#三目录结构)
@@ -148,6 +149,7 @@ LeRobot\
 │   ├─ 10-eval.ps1            上机评估        11-edit-dataset.ps1 数据集增删改
 │   ├─ 12-steering-tool.ps1   舵机调试 GUI    14-calibrate-arm.ps1 强化校准
 │   ├─ 15-preflight-calib.ps1 校准体检        16-middle-calibrate.ps1 中位校准
+│   ├─ repair-paths.ps1      ★ 项目搬家后的路径修复（见 5.7）
 │   ├─ 17-snapshot.ps1        抓样张          18-gonogo.ps1       采集前 GO/NO-GO
 │   ├─ 19-marker-check.ps1    逐点取景        20-sync-calib.ps1   校准写回舵机
 │   └─ shell.ps1              进入已激活环境的终端
@@ -660,15 +662,35 @@ except OSError:
 > ⚠️ 清理旧链接时**绝不能用 `shutil.rmtree`**：Python 认为 junction 不是符号链接，
 > 会递归进去把**目标目录的内容真删掉**。必须用 `os.rmdir()`（只删 junction 本身）。
 
-#### `.ps1` 必须 UTF-8 with BOM
+#### 编码规则：`.ps1` 要 BOM，`.json` 绝不能有 BOM
 
-Windows PowerShell 5.1 在**无 BOM** 时按 GBK 解析文件，
-中文会乱码甚至直接语法报错（`意外的标记"}"`）。
+这两条是**相反**的，混起来非常容易出问题：
+
+| 文件类型 | 编码要求 | 违反后果 |
+| --- | --- | --- |
+| `.ps1` | **UTF-8 with BOM** | PowerShell 5.1 按 GBK 解析 → 中文乱码、甚至语法报错 |
+| `.json` | **UTF-8 无 BOM** | `json.loads` 抛 `Unexpected UTF-8 BOM` → 配置读取失败 |
+| `.md` / `.py` | UTF-8 无 BOM | — |
 
 ```powershell
-# 改完脚本后统一修复编码
+# .ps1 改完统一补 BOM
 .\.venv\Scripts\python.exe _tools\to_utf8bom.py scripts
 ```
+
+PowerShell 5.1 的 `Set-Content -Encoding UTF8` 会**写 BOM**，写 JSON 时是错的：
+
+```powershell
+# ❌ 引入 BOM，之后 json.loads 直接报错
+$obj | ConvertTo-Json | Set-Content -Path $f -Encoding UTF8
+
+# ✅ 无 BOM
+$text = $obj | ConvertTo-Json
+[System.IO.File]::WriteAllText($f, $text, (New-Object System.Text.UTF8Encoding($false)))
+```
+
+> 本项目真实踩过：`repair-paths.ps1` 用 `Set-Content -Encoding UTF8` 改
+> `train_config.json`，BOM 导致 `-Resume` 续训读取配置时抛
+> `Unexpected UTF-8 BOM`。已改为 `WriteAllText` + `UTF8Encoding($false)`。
 
 #### PowerShell 5.1 引用传参陷阱
 
@@ -688,6 +710,54 @@ Windows PowerShell 5.1 在**无 BOM** 时按 GBK 解析文件，
 | GitHub 访问 | 直连会被重置，需配代理；但 `download.pytorch.org` **直连更快**（代理反而 SSL EOF） |
 | PySide6 | 装 `PySide6-Essentials`（元包会连带几百 MB 的 Addons） |
 | `edit-dataset --root` | 该版本语义矛盾（一处当完整目录、一处当父目录），**一律不传 root** |
+
+### 5.7 项目是可搬移的：路径依赖清单
+
+整个项目目录可以整体移动到任何路径（包括去掉中文路径、缩短路径），
+**不影响数据集、校准和已训练的模型**。搬家后只有 3 处需要修，
+`scripts\repair-paths.ps1` 一次性处理并自检。
+
+| 组件 | 依赖项目绝对路径？ | 说明 |
+| --- | --- | --- |
+| 数据集 / 校准 JSON | ❌ 无关 | 在 `%USERPROFILE%\.cache\huggingface\lerobot\`，**根本不在项目目录里** |
+| `scripts\*` / `_tools\*` | ❌ 无关 | 全部用 `$PSScriptRoot` / `__file__` 推导 |
+| `scripts\config.ps1` | ❌ 无关 | 只有串口、ID、相机序列号、repo_id |
+| `lerobot\.git` | ❌ 无关 | 没有 `core.worktree` 之类的绝对绑定 |
+| `.venv\pyvenv.cfg` | ❌ 无关 | 指向系统 Python，与项目位置无关 |
+| 项目 `.git` / GitHub 远程 | ❌ 无关 | 全用相对路径，URL 不变 |
+| **`.venv\...\__editable__.lerobot-*.pth`** | ✅ **依赖** | 内容就是一行绝对路径 → 搬后 `import lerobot` 直接失败 |
+| **`checkpoints\last`** | ✅ **依赖** | Windows 目录 junction，目标记的是绝对路径 → 搬后悬空 |
+| `train_config.json` 的 `output_dir` | 部分 | 绝对路径，只影响 `-Resume` 续训 |
+
+搬家步骤：
+
+```powershell
+# 1) 先确认没有进程占着项目文件 —— 这一步最容易漏
+Get-Process python,rerun -ErrorAction SilentlyContinue
+
+# 2) 移动（在不在该目录下的终端里执行）
+Move-Item "D:\旧路径\LeRobot" "D:\LeRobot"
+
+# 3) 到新位置修复 + 自检
+cd D:\LeRobot
+powershell -ExecutionPolicy Bypass -File scripts\repair-paths.ps1 -CheckOnly   # 先看问题
+powershell -ExecutionPolicy Bypass -File scripts\repair-paths.ps1             # 再自动修
+```
+
+`repair-paths.ps1` 的四步输出：
+
+```
+1) .venv 的 editable 安装指向      -> 改写 .pth 里那一行
+2) checkpoints\last（junction）      -> 用 mklink /J 重建
+3) train_config.json 的 output_dir  -> 改成新路径
+4) 自检                            -> import lerobot + 关键子模块
+```
+
+> **收益**：本项目实测把路径从 34 字符（含中文）缩到 10 字符后，
+> Windows `MAX_PATH`（260）的踩坑概率明显下降。
+> 长路径 + 中文是 Windows 上最容易出问题的组合，能短就短。
+
+---
 
 ---
 
@@ -727,6 +797,8 @@ Windows PowerShell 5.1 在**无 BOM** 时按 GBK 解析文件，
 | **视频编码刷屏** | torchvision 弃用警告淹没日志 | — | `$env:PYTHONWARNINGS="ignore::UserWarning"`（消息正则过滤实测无效） |
 | **`FileExistsError`** | 重跑评估时目录已存在 | — | `-Resume` / `-Overwrite` |
 | **`PermissionError`** | 打不开 COM10/COM11 | Seeed GUI 仍占用串口 | 关掉 `factory_calibration_tool` |
+| **JSON 被写入 BOM** | `-Resume` 报 `Unexpected UTF-8 BOM` | 查文件头 3 字节 | 改用 `WriteAllText` + `UTF8Encoding($false)` |
+| **搬家后 `import lerobot` 失败** | 模块仍是旧路径 | 查 `.pth` 内容 | 跑 `scripts\repair-paths.ps1` |
 
 ---
 
@@ -762,6 +834,7 @@ Windows PowerShell 5.1 在**无 BOM** 时按 GBK 解析文件，
 | 舵机调试 GUI | `scripts\12-steering-tool.ps1 -Action gui` |
 | 舵机 ID 扫描 | `scripts\12-steering-tool.ps1 -Action scan` |
 | 舵机级诊断 | `python _tools\servo_diag.py` |
+| **项目搬家后修复路径** | `scripts\repair-paths.ps1 [-CheckOnly]`（见 [5.7](#57-项目是可搬移的路径依赖清单)） |
 | 手动执行任意 lerobot 命令 | `scripts\shell.ps1` |
 
 ### `10-eval.ps1` 主要参数
