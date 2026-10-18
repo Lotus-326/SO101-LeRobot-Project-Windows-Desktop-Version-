@@ -193,7 +193,7 @@ LeRobot\
 ### 阶段 A：软件环境（不需要接硬件）
 
 ```powershell
-cd "D:\机电创新实验室\智能装备实验室 m1机械臂抓取\LeRobot"
+cd D:\LeRobot          # 换成你自己的克隆路径
 
 # A1 安装环境（约 3.3 GB 下载，30~45 分钟，只需一次）
 powershell -ExecutionPolicy Bypass -File scripts\setup-env.ps1
